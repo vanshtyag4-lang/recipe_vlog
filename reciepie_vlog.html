@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Recipe Blog</title>
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial;
+    background: #f7efe8;
+}
+
+header {
+    background: #ff7043;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+#searchBar {
+    width: 60%;
+    padding: 12px;
+    margin: 20px auto;
+    display: block;
+    border-radius: 7px;
+    border: 1px solid #ccc;
+    font-size: 18px;
+}
+
+.recipe-card {
+    width: 300px;
+    background: white;
+    margin: 15px;
+    border-radius: 10px;
+    padding: 15px;
+    display: inline-block;
+    vertical-align: top;
+    box-shadow: 0 0 10px #0003;
+}
+
+.recipe-card img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.rating {
+    color: gold;
+    font-size: 20px;
+}
+
+form {
+    width: 80%;
+    background: white;
+    padding: 20px;
+    margin: 30px auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #0003;
+}
+
+input, textarea, button {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background: #ff7043;
+    color: white;
+    cursor: pointer;
+    border: none;
+    font-size: 18px;
+}
+button:hover {
+    background: #e86435;
+}
+</style>
+</head>
+<body>
+
+<header>🍽️ Tasty Recipe Blog</header>
+
+<input type="text" id="searchBar" placeholder="Search recipes..." onkeyup="searchRecipes()">
+
+<div id="recipeContainer"></div>
+
+<!-- Add Recipe Form -->
+<form id="recipeForm">
+    <h2>Submit Your Recipe</h2>
+    <input type="text" id="recipeName" placeholder="Recipe Name" required>
+    <input type="text" id="recipeImg" placeholder="Image URL (optional)">
+    <textarea id="recipeDesc" placeholder="Recipe Description" required></textarea>
+    <button type="button" onclick="addRecipe()">Submit Recipe</button>
+</form>
+
+<script>
+// Default Recipes List
+let recipes = [
+    {name: "Pasta Alfredo", img: "https://picsum.photos/300/200?random=1", desc: "Creamy delicious pasta.", rating: 4},
+    {name: "Chicken Curry", img: "https://picsum.photos/300/200?random=2", desc: "Spicy and flavorful curry.", rating: 5},
+    {name: "Chocolate Cake", img: "https://picsum.photos/300/200?random=3", desc: "Rich and moist chocolate cake.", rating: 5}
+];
+
+// Display All Recipes
+function displayRecipes() {
+    let container = document.getElementById("recipeContainer");
+    container.innerHTML = "";
+
+    recipes.forEach((r, i) => {
+        container.innerHTML += `
+            <div class="recipe-card">
+                <img src="${r.img}">
+                <h3>${r.name}</h3>
+                <p>${r.desc}</p>
+                <div class="rating">${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</div>
+                <button onclick="rateRecipe(${i})">Rate +</button>
+            </div>
+        `;
+    });
+}
+displayRecipes();
+
+// Search Function
+function searchRecipes() {
+    let text = document.getElementById("searchBar").value.toLowerCase();
+    let filtered = recipes.filter(r => r.name.toLowerCase().includes(text));
+    
+    let container = document.getElementById("recipeContainer");
+    container.innerHTML = "";
+
+    filtered.forEach((r, i) => {
+        container.innerHTML += `
+            <div class="recipe-card">
+                <img src="${r.img}">
+                <h3>${r.name}</h3>
+                <p>${r.desc}</p>
+                <div class="rating">${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</div>
+                <button onclick="rateRecipe(${i})">Rate +</button>
+            </div>
+        `;
+    });
+}
+
+// Add New Recipe
+function addRecipe() {
+    let name = document.getElementById("recipeName").value;
+    let img = document.getElementById("recipeImg").value || "https://picsum.photos/300/200";
+    let desc = document.getElementById("recipeDesc").value;
+
+    recipes.push({name: name, img: img, desc: desc, rating: 0});
+    alert("Recipe Added!");
+    
+    document.getElementById("recipeForm").reset();
+    displayRecipes();
+}
+
+// Rate Recipe
+function rateRecipe(index) {
+    if (recipes[index].rating < 5) {
+        recipes[index].rating++;
+        displayRecipes();
+    }
+}
+</script>
+
+</body>
+</html>
